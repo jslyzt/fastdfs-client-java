@@ -371,4 +371,31 @@ public class ClientGlobal {
                 + "\n}";
     }
 
+    public static String getTrackerHttpUrl(TrackerServer tracker, String name) {
+        return getTrackerHttpUrl(tracker, name, "");
+    }
+
+    public static String getTrackerHttpUrl(TrackerServer tracker, String group, String name) {
+        String url = "";
+        if (g_tracker_http_ip == null || g_tracker_http_ip.length() <= 0) {
+            InetSocketAddress inetSockAddr = tracker.getInetSocketAddress();
+            url = "http://" + inetSockAddr.getAddress().getHostAddress();
+            if (g_tracker_http_port != 80) {
+                url += ":" + g_tracker_http_port;
+            }
+        } else if (g_tracker_http_ip.indexOf(":") > 0 || g_tracker_http_port != 80) {
+            url += g_tracker_http_ip;
+        } else {
+            url += g_tracker_http_ip + ":" + g_tracker_http_port;
+        }
+        int urlen = url.length();
+        if(urlen > 0 && url.charAt(urlen-1) != '/') {
+            url += "/";
+        }
+        if(name.length() > 0) {
+            return url + group + "/" + name;
+        }
+        return url + group;
+    }
+
 }

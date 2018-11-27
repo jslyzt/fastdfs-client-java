@@ -191,25 +191,13 @@ public class TestClient {
                 String file_id;
                 int ts;
                 String token;
-                String file_url = "";
 
                 group_name = results[0];
                 remote_filename = results[1];
                 file_id = group_name + StorageClient1.SPLIT_GROUP_NAME_AND_FILENAME_SEPERATOR + remote_filename;
 
-                if (ClientGlobal.g_tracker_http_ip == null || ClientGlobal.g_tracker_http_ip.length() <= 0) {
-                    InetSocketAddress inetSockAddr = trackerServer.getInetSocketAddress();
-                    file_url = "http://" + inetSockAddr.getAddress().getHostAddress();
-                    if (ClientGlobal.g_tracker_http_port != 80) {
-                        file_url += ":" + ClientGlobal.g_tracker_http_port;
-                    }
-                } else if (ClientGlobal.g_tracker_http_ip.indexOf(":") > 0 || ClientGlobal.g_tracker_http_port != 80) {
-                    file_url += ClientGlobal.g_tracker_http_ip;
-                } else {
-                    file_url += ClientGlobal.g_tracker_http_ip + ":" + ClientGlobal.g_tracker_http_port;
-                }
+                String file_url = ClientGlobal.getTrackerHttpUrl(trackerServer, file_id);
 
-                file_url += "/" + file_id;
                 if (ClientGlobal.g_anti_steal_token) {
                     ts = (int) (System.currentTimeMillis() / 1000);
                     token = ProtoCommon.getToken(file_id, ts, ClientGlobal.g_secret_key);

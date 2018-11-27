@@ -174,21 +174,8 @@ public class TestAppender1 {
             if (appender_file_id != null) {
                 int ts;
                 String token;
-                String file_url = "";
+                String file_url = ClientGlobal.getTrackerHttpUrl(trackerServer, file_id);
 
-                if (ClientGlobal.g_tracker_http_ip == null || ClientGlobal.g_tracker_http_ip.length() <= 0) {
-                    InetSocketAddress inetSockAddr = trackerServer.getInetSocketAddress();
-                    file_url = "http://" + inetSockAddr.getAddress().getHostAddress();
-                    if (ClientGlobal.g_tracker_http_port != 80) {
-                        file_url += ":" + ClientGlobal.g_tracker_http_port;
-                    }
-                } else if (ClientGlobal.g_tracker_http_ip.indexOf(":") > 0 || ClientGlobal.g_tracker_http_port != 80) {
-                    file_url += ClientGlobal.g_tracker_http_ip;
-                } else {
-                    file_url += ClientGlobal.g_tracker_http_ip + ":" + ClientGlobal.g_tracker_http_port;
-                }
-
-                file_url += "/" + appender_file_id;
                 if (ClientGlobal.g_anti_steal_token) {
                     ts = (int) (System.currentTimeMillis() / 1000);
                     token = ProtoCommon.getToken(appender_file_id, ts, ClientGlobal.g_secret_key);
